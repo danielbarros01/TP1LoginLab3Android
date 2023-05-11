@@ -1,6 +1,7 @@
 package ui.registro;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import com.example.examplelogin.R;
 import com.example.examplelogin.databinding.ActivityMainBinding;
 import com.example.examplelogin.databinding.ActivityRegistroBinding;
+
+import java.util.Optional;
 
 import models.Usuario;
 import ui.login.ViewModelMain;
@@ -28,14 +31,29 @@ public class RegistroActivity extends AppCompatActivity {
         binding = ActivityRegistroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        vm = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(ViewModelRegistro.class);
-
+        //widgets
         dni = binding.tvDni;
         nombre = binding.tvNombre;
         apellido = binding.tvApellido;
         mail = binding.tvMail;
         password = binding.tvPassword;
         btnGuardar = binding.btnGuardar;
+        //-----
+
+        vm = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(ViewModelRegistro.class);
+
+        vm.login(getIntent().getBooleanExtra("login",false));
+
+        vm.getUsuario().observe(this, new Observer<Usuario>() {
+            @Override
+            public void onChanged(Usuario u) {
+                dni.setText(String.valueOf(u.getDni()));
+                nombre.setText(u.getNombre());
+                apellido.setText(u.getApellido());
+                mail.setText(u.getMail());
+                password.setText(u.getPassword());
+            }
+        });
 
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,12 +2,15 @@ package ui.login;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import models.Usuario;
 import request.ApiClient;
+import ui.registro.RegistroActivity;
 
 public class ViewModelMain extends AndroidViewModel {
 
@@ -20,7 +23,17 @@ public class ViewModelMain extends AndroidViewModel {
 
     public void login(String mail, String password){
         try {
-            ApiClient.login(context, mail, password);
+            Usuario usuario = ApiClient.login(context, mail, password);
+
+            if(usuario != null) {
+                Intent intent = new Intent(context, RegistroActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("login", true);
+                context.startActivity(intent);
+            }
+
+            Toast.makeText(context, "Usuario incorrecto o inexistente", Toast.LENGTH_SHORT).show();
+
         }catch (Exception e){
             Toast.makeText(context, "Error al iniciar sesion" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
