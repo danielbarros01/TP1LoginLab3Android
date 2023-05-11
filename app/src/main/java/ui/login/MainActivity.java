@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        vm.mensaje(getIntent().getStringExtra("login"));
+        vm.mensaje(getIntent().getStringExtra("msg"));
         /*
         String msg = Optional.ofNullable(getIntent().getStringExtra("msg"))
                 .orElse("Bienvenido");
