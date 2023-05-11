@@ -3,7 +3,6 @@ package ui.registro;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -49,7 +48,7 @@ public class ViewModelRegistro extends AndroidViewModel {
         } catch (Exception e) {
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("msg", "Error al cargar nuevo usuario");
+            intent.putExtra("msg", "Error al cargar los datos");
             context.startActivity(intent);
         }
     }

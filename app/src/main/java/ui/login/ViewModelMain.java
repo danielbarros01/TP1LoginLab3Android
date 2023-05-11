@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.Optional;
+
 import models.Usuario;
 import request.ApiClient;
 import ui.registro.RegistroActivity;
@@ -37,5 +39,11 @@ public class ViewModelMain extends AndroidViewModel {
         }catch (Exception e){
             Toast.makeText(context, "Error al iniciar sesion" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void mensaje(String mensaje){
+        String msg = Optional.ofNullable(mensaje)
+                .orElse("Bienvenido");
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }

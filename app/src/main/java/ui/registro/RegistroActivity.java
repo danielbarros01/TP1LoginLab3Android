@@ -9,14 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.examplelogin.R;
-import com.example.examplelogin.databinding.ActivityMainBinding;
 import com.example.examplelogin.databinding.ActivityRegistroBinding;
 
-import java.util.Optional;
 
 import models.Usuario;
-import ui.login.ViewModelMain;
 
 public class RegistroActivity extends AppCompatActivity {
 

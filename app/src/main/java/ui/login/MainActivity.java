@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.examplelogin.R;
 import com.example.examplelogin.databinding.ActivityMainBinding;
 
 import java.util.Optional;
@@ -60,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        vm.mensaje(getIntent().getStringExtra("login"));
+        /*
         String msg = Optional.ofNullable(getIntent().getStringExtra("msg"))
                 .orElse("Bienvenido");
         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
-
+        */
     }
 }
