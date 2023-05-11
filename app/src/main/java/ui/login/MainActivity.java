@@ -8,11 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.examplelogin.databinding.ActivityMainBinding;
-
-import java.util.Optional;
 
 import ui.registro.RegistroActivity;
 
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //ir a otra vista
                 Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
-                intent.putExtra("logueado",false);
+                intent.putExtra("logueado", false);
                 startActivity(intent);
             }
         });

@@ -32,10 +32,9 @@ public class ViewModelMain extends AndroidViewModel {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("login", true);
                 context.startActivity(intent);
+            }else{
+                Toast.makeText(context, "Usuario incorrecto o inexistente", Toast.LENGTH_SHORT).show();
             }
-
-            Toast.makeText(context, "Usuario incorrecto o inexistente", Toast.LENGTH_SHORT).show();
-
         }catch (Exception e){
             Toast.makeText(context, "Error al iniciar sesion" + e.getMessage(), Toast.LENGTH_LONG).show();
         }

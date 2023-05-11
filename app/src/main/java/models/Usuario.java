@@ -1,10 +1,17 @@
 package models;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private String apellido, nombre, mail, password;
     private long dni;
 
-    public Usuario(String nombre,String apellido,  String mail, String password, long dni) {
+    public Usuario(String mail, String password) {
+        this.mail = mail;
+        this.password = password;
+    }
+
+    public Usuario(String nombre, String apellido, String mail, String password, long dni) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.mail = mail;
@@ -62,4 +69,5 @@ public class Usuario {
     public void setDni(long dni) {
         this.dni = dni;
     }
+
 }

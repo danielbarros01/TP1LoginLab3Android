@@ -33,18 +33,14 @@ public class ViewModelRegistro extends AndroidViewModel {
 
     public void registrar(Usuario usuario) {
         try {
-
-            String msg = ApiClient.leer(context).getDni() == usuario.getDni()
-                    ? "Usuario actualizado"
-                    : "Usuario guardado";
+            String msg = mensaje(usuario);
 
             ApiClient.guardar(context, usuario);
 
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("msg", String.format(msg, " con exito"));
+            intent.putExtra("msg", String.format(msg," con exito"));
             context.startActivity(intent);
-
         } catch (Exception e) {
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -56,8 +52,22 @@ public class ViewModelRegistro extends AndroidViewModel {
     public void login(Boolean login) {
         Usuario user = login ? ApiClient.leer(context) : null;
 
-        if (user != null) {
+       if (user != null) {
             userMutable.setValue(user);
         }
+    }
+
+    public String mensaje(Usuario usuario){
+        String msg = "";
+        try {
+            msg = ApiClient.leer(context).getDni() == usuario.getDni()
+                    ? "Usuario actualizado"
+                    : "Usuario guardado";
+
+        }catch (NullPointerException e){
+            msg = "Usuario guardado";
+        }
+
+        return msg;
     }
 }
