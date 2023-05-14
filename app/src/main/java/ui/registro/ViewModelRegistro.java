@@ -1,22 +1,36 @@
 package ui.registro;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import models.Usuario;
 import request.ApiClient;
 import ui.login.MainActivity;
 
 public class ViewModelRegistro extends AndroidViewModel {
-
     private Context context;
     private MutableLiveData<Usuario> userMutable = new MutableLiveData<Usuario>();
+    private MutableLiveData<Bitmap> foto;
 
     public ViewModelRegistro(@NonNull Application application) {
         super(application);
@@ -31,6 +45,13 @@ public class ViewModelRegistro extends AndroidViewModel {
         return userMutable;
     }
 
+    public LiveData<Bitmap> getFoto() {
+        if (foto == null) {
+            foto = new MutableLiveData<>();
+        }
+        return foto;
+    }
+
     public void registrar(Usuario usuario) {
         try {
             String msg = mensaje(usuario);
@@ -39,7 +60,7 @@ public class ViewModelRegistro extends AndroidViewModel {
 
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("msg", String.format(msg," con exito"));
+            intent.putExtra("msg", String.format(msg, " con exito"));
             context.startActivity(intent);
         } catch (Exception e) {
             Intent intent = new Intent(context, MainActivity.class);
@@ -52,22 +73,74 @@ public class ViewModelRegistro extends AndroidViewModel {
     public void login(Boolean login) {
         Usuario user = login ? ApiClient.leer(context) : null;
 
-       if (user != null) {
+        if (user != null) {
             userMutable.setValue(user);
         }
     }
 
-    public String mensaje(Usuario usuario){
+    public String mensaje(Usuario usuario) {
         String msg = "";
         try {
             msg = ApiClient.leer(context).getDni() == usuario.getDni()
                     ? "Usuario actualizado"
                     : "Usuario guardado";
 
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             msg = "Usuario guardado";
         }
 
         return msg;
+    }
+
+    public void respuetaDeCamara(int requestCode, int resultCode, @Nullable Intent data, int REQUEST_IMAGE_CAPTURE) {
+        Log.d("salida", requestCode + "");
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            //Recupero los datos provenientes de la camara.
+            Bundle extras = data.getExtras();
+            //Casteo a bitmap lo obtenido de la camara.
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            //Rutina para optimizar la foto,
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            foto.setValue(imageBitmap);
+
+
+            //Rutina para convertir a un arreglo de byte los datos de la imagen
+            byte[] b = baos.toByteArray();
+
+
+            //Aquí podría ir la rutina para llamar al servicio que recibe los bytes.
+            File archivo = new File(context.getFilesDir(), "foto1.png");
+            if (archivo.exists()) {
+                archivo.delete();
+            }
+            try {
+                FileOutputStream fo = new FileOutputStream(archivo);
+                BufferedOutputStream bo = new BufferedOutputStream(fo);
+                bo.write(b);
+                bo.flush();
+                bo.close();
+                Intent segunda = new Intent(context, RegistroActivity.class);
+                segunda.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(segunda);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void cargar() {
+        File archivo = new File(context.getFilesDir(), "foto1.png");
+
+
+        Bitmap imageBitmap = BitmapFactory.decodeFile(archivo.getAbsolutePath());
+        if (imageBitmap != null) {
+            foto.setValue(imageBitmap);
+        }
+
+
     }
 }
