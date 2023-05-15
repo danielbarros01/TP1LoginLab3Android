@@ -1,6 +1,7 @@
 package request;
 
 import android.content.Context;
+import android.content.Intent;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import models.Usuario;
+import ui.registro.RegistroActivity;
 
 public class ApiClient {
     private static File file;
@@ -43,6 +45,25 @@ public class ApiClient {
         }
     }
 
+    public static void guardarFoto(Context context, byte[] b) {
+        File archivo = new File(context.getFilesDir(), "foto1.png");
+        if (archivo.exists()) {
+            archivo.delete();
+        }
+
+        try {
+            FileOutputStream fo = new FileOutputStream(archivo);
+            BufferedOutputStream bo = new BufferedOutputStream(fo);
+            bo.write(b);
+            bo.flush();
+            bo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Usuario leer(Context context) {
         File archivo = conectar(context);
         Usuario usuario = null;
@@ -70,7 +91,7 @@ public class ApiClient {
         Usuario usuario = leer(context);
         File archivo = conectar(context);
 
-        if(usuario != null){
+        if (usuario != null) {
             if (!mail.equals(usuario.getMail()) || !password.equals(usuario.getPassword())) {
                 usuario = null;
             }

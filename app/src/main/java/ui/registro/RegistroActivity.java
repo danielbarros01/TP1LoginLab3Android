@@ -57,6 +57,7 @@ public class RegistroActivity extends AppCompatActivity {
                 apellido.setText(u.getApellido());
                 mail.setText(u.getMail());
                 password.setText(u.getPassword());
+                vm.cargar();
             }
         });
 
@@ -70,8 +71,8 @@ public class RegistroActivity extends AppCompatActivity {
                         apellido.getText().toString(),
                         mail.getText().toString(),
                         password.getText().toString(),
-                        Long.parseLong(dni.getText().toString()),
-                        archivo.getAbsolutePath()
+                        Long.parseLong(dni.getText().toString())
+                        //archivo.getAbsolutePath()
                 );
 
                 vm.registrar(u);
@@ -82,10 +83,8 @@ public class RegistroActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //startActivityForResult es otra forma de iniciar una activity, pero esperando desde donde la llamé un resultado
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         }));
 

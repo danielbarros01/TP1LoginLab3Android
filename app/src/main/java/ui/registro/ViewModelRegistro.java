@@ -31,6 +31,7 @@ public class ViewModelRegistro extends AndroidViewModel {
     private Context context;
     private MutableLiveData<Usuario> userMutable = new MutableLiveData<Usuario>();
     private MutableLiveData<Bitmap> foto;
+    private byte[] fotoBytes = new byte[0];
 
     public ViewModelRegistro(@NonNull Application application) {
         super(application);
@@ -56,6 +57,10 @@ public class ViewModelRegistro extends AndroidViewModel {
         try {
             String msg = mensaje(usuario);
 
+            if (fotoBytes.length > 0) {
+                usuario.setFoto(fotoBytes);
+            }
+
             ApiClient.guardar(context, usuario);
 
             Intent intent = new Intent(context, MainActivity.class);
@@ -63,6 +68,7 @@ public class ViewModelRegistro extends AndroidViewModel {
             intent.putExtra("msg", String.format(msg, " con exito"));
             context.startActivity(intent);
         } catch (Exception e) {
+            Log.d("error1", e.getMessage());
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("msg", "Error al cargar los datos");
@@ -105,42 +111,23 @@ public class ViewModelRegistro extends AndroidViewModel {
             imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             foto.setValue(imageBitmap);
 
-
             //Rutina para convertir a un arreglo de byte los datos de la imagen
             byte[] b = baos.toByteArray();
 
+            //Asignar el arreglo de bytes al atributo fotoBytes.
+            fotoBytes = b;
 
             //Aquí podría ir la rutina para llamar al servicio que recibe los bytes.
-            File archivo = new File(context.getFilesDir(), "foto1.png");
-            if (archivo.exists()) {
-                archivo.delete();
-            }
-            try {
-                FileOutputStream fo = new FileOutputStream(archivo);
-                BufferedOutputStream bo = new BufferedOutputStream(fo);
-                bo.write(b);
-                bo.flush();
-                bo.close();
-                Intent segunda = new Intent(context, RegistroActivity.class);
-                segunda.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(segunda);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ApiClient.guardarFoto(context, b);
         }
     }
 
     public void cargar() {
         File archivo = new File(context.getFilesDir(), "foto1.png");
 
-
         Bitmap imageBitmap = BitmapFactory.decodeFile(archivo.getAbsolutePath());
         if (imageBitmap != null) {
             foto.setValue(imageBitmap);
         }
-
-
     }
 }

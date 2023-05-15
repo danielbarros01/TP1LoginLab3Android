@@ -3,21 +3,21 @@ package models;
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
-    private String apellido, nombre, mail, password, direccionFoto;
+    private String apellido, nombre, mail, password;
     private long dni;
+    private byte[] foto;
 
     public Usuario(String mail, String password) {
         this.mail = mail;
         this.password = password;
     }
 
-    public Usuario(String nombre, String apellido, String mail, String password, long dni, String direccionFoto) {
+    public Usuario(String nombre, String apellido, String mail, String password, long dni) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.mail = mail;
         this.password = password;
         this.dni = dni;
-        this.direccionFoto = direccionFoto;
     }
 
     @Override
@@ -71,11 +71,11 @@ public class Usuario implements Serializable {
         this.dni = dni;
     }
 
-    public String getDireccionFoto() {
-        return direccionFoto;
+    public byte[] getFoto() {
+        return foto;
     }
 
-    public void setDireccionFoto(String direccionFoto) {
-        this.direccionFoto = direccionFoto;
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
     }
 }
